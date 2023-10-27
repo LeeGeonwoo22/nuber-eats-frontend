@@ -4,6 +4,7 @@ import { isLoggedInVar } from "../apollo";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { CreateAccount } from "../pages/create-account";
 import { Login } from "../pages/login";
+import { NotFound } from "../pages/404";
 
 // router 구현을 위해 삭제함. 
 // interface IForm {
@@ -74,8 +75,11 @@ export const LoggedOutRouter = () => {
         <Route path="/create-account">
           <CreateAccount />
         </Route>
-        <Route path="/">
+        <Route path="/" exact>
           <Login />
+        </Route>
+        <Route>
+          <NotFound />
         </Route>
       </Switch>
     </Router>
