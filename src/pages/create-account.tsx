@@ -1,12 +1,13 @@
-import { gql, useMutation } from "@apollo/client";
+import { ApolloError, gql, useMutation } from "@apollo/client";
 import React from "react";
-import { Helmet } from "react-helmet";
+
 import { useForm } from "react-hook-form";
 import nuberLogo from "../images/logo.svg"
 import { FormError } from "../components/form-error";
 import { Link, useHistory } from "react-router-dom";
 import { Button } from "../components/button";
 import { CreateAccountMutation, CreateAccountMutationVariables, UserRole } from "../__generated__/graphql";
+import { Helmet } from "react-helmet-async";
 
 const CREATE_ACCOUNT_MUTATION = gql`
   mutation createAccount($createAccountInput: CreateAccountInput!) {
@@ -40,6 +41,9 @@ export const CreateAccount = () => {
    CreateAccountMutationVariables
    >(CREATE_ACCOUNT_MUTATION);
    const history = useHistory();
+    const onError = (error: ApolloError) => {
+      console.log("error :", error);
+    };
    const onCompleted = (data: CreateAccountMutation) => {
      const {
        createAccount: { ok },
@@ -50,6 +54,7 @@ export const CreateAccount = () => {
       history.push("/")
      }
    };
+   
    const [
      createAccountMutation,
      { loading, data: createAccountMutationResult },
@@ -57,6 +62,7 @@ export const CreateAccount = () => {
      CREATE_ACCOUNT_MUTATION,
      {
        onCompleted,
+       onError
      }
    );
    const onSubmit = () => {

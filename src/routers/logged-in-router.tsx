@@ -5,26 +5,18 @@ import {
   Route,
   Switch,
 } from "react-router-dom";
-import { gql, useQuery } from "@apollo/client";
-// import { MeQuery } from "../__generated__/graphql";
 import { Restaurants } from "../pages/client/restaurant";
 import { Header } from "../components/header";
 import { useMe } from "../hooks/useMe";
-
-// const ME_QUERY = gql`
-//   query me {
-//     me {
-//       email
-//       id
-//       role
-//       verified
-//     }
-//   }
-// `;
+import { ConfirmEmail } from "../pages/confirm-email";
+import { NotFound } from "../pages/404";
 
 const ClientRoutes = [
-  <Route path="/" exact>
+  <Route key={1} path="/" exact>
     <Restaurants />
+  </Route>,
+  <Route key={2} path="/confirm" exact>
+    <ConfirmEmail />
   </Route>,
 ];
 
@@ -34,8 +26,8 @@ const ClientRoutes = [
       loading,
       error
     } = useMe();
-    console.log('meQuery data :', data)
-    console.log('token error :', error);
+    // console.log('meQuery data :', data)
+    // console.log('token error :', error);
     if (!data || loading || error) {
       return (
         <div className="h-screen flex justify-center items-center">
@@ -43,15 +35,16 @@ const ClientRoutes = [
         </div>
       );
     }
+
     return (
-      // <div>
-      //   <h1>{data.me.email}</h1>
-      // </div>
       <Router>
         <Header />
         <Switch>
           {data.me.role === "Client" && ClientRoutes}
-          <Redirect to="/" />
+          {/* <Redirect to="/" /> */}
+          <Route>
+            <NotFound />
+          </Route>
         </Switch>
       </Router>
     );    

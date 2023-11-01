@@ -6,9 +6,11 @@ import { LoginMutation, LoginMutationVariables } from "../__generated__/graphql"
 import nuberLogo from "../images/logo.svg";
 import { Link } from "react-router-dom";
 import { Button } from "../components/button";
-import { Helmet } from "react-helmet";
+// import { Helmet } from "react-helmet";
+
 import { authTokenVar, isLoggedInVar } from "../apollo";
 import { LOCALSTORAGE_TOKEN } from "../constants";
+import { Helmet } from "react-helmet-async";
 
 const LOGIN_MUTATION = gql`
   mutation login($loginInput: LoginInput!) {
@@ -36,20 +38,26 @@ export const Login = () =>{
     } = useForm<ILoginForm>({ mode : "onChange"});
     const onCompleted = (data: LoginMutation) =>{
       // console.log(data.login.token)
-      console.log('loginMutation data : ', data)
-      const { login : {ok, token}} = data;
-          if (ok && token) {
-            console.log(token);
-            localStorage.setItem(LOCALSTORAGE_TOKEN, token);
-            authTokenVar(token);
-            isLoggedInVar(true);
-          }
+      // console.log('loginMutation data : ', data)
+      const {
+        login: { ok, token },
+      } = data;
+
+      // null 값을 띄게 되므로 token을 조건문에 넣어준다. 
+      // const token: string | null | undefined
+      if (ok && token) {
+        // console.log('token :', token);
+        localStorage.setItem(LOCALSTORAGE_TOKEN, token);
+        authTokenVar(token);
+        isLoggedInVar(true);
+      }
     };
 
     // false 는 onCompleted 에서 오는 에러이다. 
     // 요청이 유효하지않거나 인증이 필요하거나 url이 잘못될 경우에 나온다. 
-    const onError = (error: ApolloError) =>{
-      
+    const onError = (error: ApolloError) =>{  
+      console.log('error :', error)
+  
     }
       const [loginMutation,{data : loginMutationResult, loading}] = useMutation<
         LoginMutation,
