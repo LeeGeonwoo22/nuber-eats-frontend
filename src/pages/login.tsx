@@ -69,6 +69,15 @@ export const Login = () =>{
       const onSubmit = () => {
       if(!loading) {
         const { email, password } = getValues();
+            const getTokenFromSomeWhere = () => {
+              return localStorage.getItem(LOCALSTORAGE_TOKEN);
+            };
+             const token = getTokenFromSomeWhere();
+            const headers = {
+              Authorization: `Bearer ${token}`,
+            };
+            console.log("Token:", token);
+            console.log("Headers:", headers);
         loginMutation({
           variables: {
             loginInput: {
