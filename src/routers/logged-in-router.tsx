@@ -10,6 +10,7 @@ import { Header } from "../components/header";
 import { useMe } from "../hooks/useMe";
 import { ConfirmEmail } from "../pages/confirm-email";
 import { NotFound } from "../pages/404";
+import { EditProfile } from "../pages/edit-profile";
 
 const ClientRoutes = [
   <Route key={1} path="/" exact>
@@ -18,6 +19,9 @@ const ClientRoutes = [
   <Route key={2} path="/confirm" exact>
     <ConfirmEmail />
   </Route>,
+  <Route key={3} path="/edit-profile" exact>
+    <EditProfile></EditProfile>
+  </Route>
 ];
 
   export const LoggedInRouter = () => {
@@ -26,7 +30,7 @@ const ClientRoutes = [
       loading,
       error
     } = useMe();
-    // console.log('meQuery data :', data)
+    
     // console.log('token error :', error);
     if (!data || loading || error) {
       return (
@@ -35,13 +39,12 @@ const ClientRoutes = [
         </div>
       );
     }
-
+    console.log("meQuery data :", data);
     return (
       <Router>
         <Header />
         <Switch>
           {data.me.role === "Client" && ClientRoutes}
-          {/* <Redirect to="/" /> */}
           <Route>
             <NotFound />
           </Route>

@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
-import { gql, useMutation } from "@apollo/client";
+import { gql, useApolloClient, useMutation } from "@apollo/client";
 import { VerifyEmailMutation, VerifyEmailMutationVariables } from "../__generated__/graphql";
-import { useLocation } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
+import { useMe } from "../hooks/useMe";
 
 const VERIFY_EMAIL_MUTATION = gql`
     mutation verifyEmail($input : VerifyEmailInput!) {
@@ -13,16 +14,48 @@ const VERIFY_EMAIL_MUTATION = gql`
 `;
 
 export const ConfirmEmail = () =>{
-    const [verifyEmail, {loading : verifyingEmail}] = useMutation<
-    VerifyEmailMutation,
-    VerifyEmailMutationVariables
-    >(VERIFY_EMAIL_MUTATION);
+  const { data: userData } = useMe();
+  const client = useApolloClient();
+  const history = useHistory();
+  const onCompleted = (data: VerifyEmailMutation) => {
+    const {
+      verifyEmail: { ok },
+    } = data;
+    if (ok && userData?.me.id) {
+      client.writeFragment({
+        id: `User:${userData.me.id}`,
+        fragment: gql`
+          fragment VerifiedUser on User {
+            verified
+          }
+        `,
+        data: {
+          verified: true,
+        },
+      });
+      history.push("/")
+    }
+  };
+  const [verifyEmail] = useMutation<VerifyEmailMutation, VerifyEmailMutationVariables>(
+    VERIFY_EMAIL_MUTATION,
+    {
+      onCompleted,
+    }
+  );
     const location = useLocation;
     useEffect(() => {
-        console.log("useLocation :", useLocation);
-        console.log(window.location.href.split("code="));
+        console.log("useLocation :", location);
+        console.log(window.location.href.split("code=")); 
+        //  const params = new URLSearchParams(location.search);
         const [_, code] = window.location.href.split("code=");
-   }, []);
+      verifyEmail({
+      variables: {
+        input: {
+          code,
+        },
+      },
+    }); 
+   }, [verifyEmail]);
 
      return (
        <div className="mt-52 flex flex-col items-center justify-center">

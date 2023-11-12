@@ -17,7 +17,7 @@ export const authTokenVar = makeVar(token);
 // console.log("default value of isLoggedInVar is:", isLoggedInVar());
 // console.log("default value of authTokenVar is:", authTokenVar());
 
-console.log('apollo client user token:', token)
+console.log('apollo client user token:', Headers)
 const httpLink = createHttpLink({
   uri: "http://localhost:4000/graphql",
 });
