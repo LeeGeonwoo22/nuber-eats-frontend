@@ -76,8 +76,8 @@ export const Login = () =>{
             const headers = {
               Authorization: `Bearer ${token}`,
             };
-            console.log("Token:", token);
-            console.log("Headers:", headers);
+            // console.log("Token:", token);
+            // console.log("Headers:", headers);
         loginMutation({
           variables: {
             loginInput: {

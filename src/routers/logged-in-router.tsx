@@ -5,7 +5,7 @@ import {
   Route,
   Switch,
 } from "react-router-dom";
-import { Restaurants } from "../pages/client/restaurant";
+import { Restaurants } from "../pages/client/restaurants";
 import { Header } from "../components/header";
 import { useMe } from "../hooks/useMe";
 import { ConfirmEmail } from "../pages/confirm-email";
